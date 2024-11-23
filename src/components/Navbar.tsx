@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, Menu, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +12,15 @@ import {
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
+  const { items } = useCart();
 
   const scrollToContact = (e: React.MouseEvent) => {
     e.preventDefault();
     const footer = document.querySelector('footer');
     footer?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const cartItemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <nav className="bg-white border-b">
@@ -116,8 +120,13 @@ const Navbar = () => {
               </DropdownMenu>
             </div>
 
-            <Link to="/cart" className="p-2 hover:text-accent">
+            <Link to="/cart" className="relative p-2 hover:text-accent">
               <ShoppingCart className="h-6 w-6" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

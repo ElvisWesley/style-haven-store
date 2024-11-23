@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCart } from "@/contexts/CartContext";
 
 interface Product {
   id: number;
@@ -22,6 +23,7 @@ interface Product {
 const ProductPage = () => {
   const { id } = useParams();
   const { toast } = useToast();
+  const { addItem } = useCart();
 
   const { data: product, isLoading } = useQuery<Product>({
     queryKey: ["product", id],
@@ -35,10 +37,9 @@ const ProductPage = () => {
   });
 
   const handleAddToCart = () => {
-    toast({
-      title: "Added to cart",
-      description: `${product?.name} has been added to your cart.`,
-    });
+    if (product) {
+      addItem(product, 1);
+    }
   };
 
   if (isLoading) {
