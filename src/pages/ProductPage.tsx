@@ -8,11 +8,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  category: string;
+  images: string[];
+  video_url: string;
+  specifications: Record<string, string>;
+}
+
 const ProductPage = () => {
   const { id } = useParams();
   const { toast } = useToast();
 
-  const { data: product, isLoading } = useQuery({
+  const { data: product, isLoading } = useQuery<Product>({
     queryKey: ["product", id],
     queryFn: async () => {
       const response = await fetch(`http://localhost:5000/api/products/${id}`);
@@ -26,7 +37,7 @@ const ProductPage = () => {
   const handleAddToCart = () => {
     toast({
       title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
+      description: `${product?.name} has been added to your cart.`,
     });
   };
 
@@ -94,10 +105,10 @@ const ProductPage = () => {
               <TabsContent value="specifications" className="mt-4">
                 <Card className="p-4">
                   <dl className="space-y-2">
-                    {Object.entries(product?.specifications || {}).map(([key, value]) => (
+                    {product?.specifications && Object.entries(product.specifications).map(([key, value]) => (
                       <div key={key} className="grid grid-cols-2">
                         <dt className="font-medium capitalize">{key}</dt>
-                        <dd>{value}</dd>
+                        <dd>{String(value)}</dd>
                       </div>
                     ))}
                   </dl>
