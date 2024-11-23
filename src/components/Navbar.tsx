@@ -9,6 +9,12 @@ import {
 } from "./ui/dropdown-menu";
 
 const Navbar = () => {
+  const scrollToContact = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const footer = document.querySelector('footer');
+    footer?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <nav className="bg-white border-b">
       <div className="container mx-auto px-4 py-4">
@@ -24,7 +30,7 @@ const Navbar = () => {
             <Link to="/category/wall-fireplaces" className="hover:text-accent">Wall Fireplaces</Link>
             <Link to="/category/floor-fireplaces" className="hover:text-accent">Floor Fireplaces</Link>
             <Link to="/about" className="hover:text-accent">About</Link>
-            <Link to="/contact" className="hover:text-accent">Contact</Link>
+            <a href="#contact" onClick={scrollToContact} className="hover:text-accent">Contact</a>
           </div>
 
           {/* Mobile Menu */}
@@ -52,7 +58,7 @@ const Navbar = () => {
                   <Link to="/about">About</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/contact">Contact</Link>
+                  <a href="#contact" onClick={scrollToContact}>Contact</a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
