@@ -26,7 +26,6 @@ const Navbar = () => {
             Interior Haven
           </Link>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/category/tables" className="hover:text-accent">Tables</Link>
             <Link to="/category/lanterns" className="hover:text-accent">Lanterns</Link>
@@ -46,6 +45,11 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem disabled>{user.email}</DropdownMenuItem>
+                  {user.is_admin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">Admin Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={() => signOut()}>Sign Out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -60,7 +64,6 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* Mobile Menu */}
             <div className="md:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -98,9 +101,16 @@ const Navbar = () => {
                     </>
                   )}
                   {user && (
-                    <DropdownMenuItem onClick={() => signOut()}>
-                      Sign Out
-                    </DropdownMenuItem>
+                    <>
+                      {user.is_admin && (
+                        <DropdownMenuItem asChild>
+                          <Link to="/admin">Admin Dashboard</Link>
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem onClick={() => signOut()}>
+                        Sign Out
+                      </DropdownMenuItem>
+                    </>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
