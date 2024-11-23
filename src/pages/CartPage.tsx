@@ -3,9 +3,53 @@ import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { loadStripe } from "@stripe/stripe-js";
+import { useToast } from "@/components/ui/use-toast";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const CartPage = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
+  const { toast } = useToast();
+
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const { sessionId } = await response.json();
+      const stripe = await stripePromise;
+      
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to initiate checkout",
+      });
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -93,7 +137,12 @@ const CartPage = () => {
                 </div>
               </div>
             </div>
-            <Button className="w-full">Proceed to Checkout</Button>
+            <Button 
+              className="w-full"
+              onClick={handleCheckout}
+            >
+              Proceed to Checkout
+            </Button>
           </div>
         </div>
       </main>
