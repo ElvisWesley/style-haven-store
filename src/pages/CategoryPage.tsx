@@ -1,58 +1,47 @@
-import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  category: string;
-}
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Modern Dining Table",
-    price: "1,299",
-    image: "https://images.unsplash.com/photo-1577140917170-285929fb55b7",
-    category: "tables"
-  },
-  {
-    id: 2,
-    name: "Rustic Coffee Table",
-    price: "899",
-    image: "https://images.unsplash.com/photo-1532372320572-cda25653a26d",
-    category: "tables"
-  },
-  {
-    id: 3,
-    name: "Vintage Lantern Set",
-    price: "249",
-    image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15",
-    category: "lanterns"
-  },
-  {
-    id: 4,
-    name: "Modern Wall Fireplace",
-    price: "1,499",
-    image: "https://images.unsplash.com/photo-1600585152220-90363fe7e115",
-    category: "wall-fireplaces"
-  },
-  {
-    id: 5,
-    name: "Contemporary Floor Fireplace",
-    price: "2,499",
-    image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde",
-    category: "floor-fireplaces"
-  }
-];
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CategoryPage = () => {
   const { category } = useParams();
-  const categoryProducts = products.filter(product => product.category === category);
+
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["products", category],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:5000/api/products/category/${category}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow container mx-auto py-12">
+          <div className="product-grid">
+            {[...Array(6)].map((_, i) => (
+              <Card key={i} className="product-card">
+                <CardContent className="p-0">
+                  <Skeleton className="aspect-square rounded-t-lg" />
+                  <div className="p-4">
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-1/4" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -62,13 +51,13 @@ const CategoryPage = () => {
           {category?.replace("-", " ")}
         </h1>
         <div className="product-grid">
-          {categoryProducts.map((product) => (
+          {products?.map((product) => (
             <Card key={product.id} className="product-card">
               <CardContent className="p-0">
                 <Link to={`/product/${product.id}`}>
                   <div className="aspect-square overflow-hidden rounded-t-lg">
                     <img
-                      src={product.image}
+                      src={product.images[0]}
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />
