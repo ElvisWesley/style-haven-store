@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { Separator } from "./ui/separator";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,12 +52,19 @@ const Navbar = () => {
           </form>
 
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/category/tables" className="hover:text-accent">Tables</Link>
-            <Link to="/category/lanterns" className="hover:text-accent">Lanterns</Link>
-            <Link to="/category/wall-fireplaces" className="hover:text-accent">Wall Fireplaces</Link>
-            <Link to="/category/floor-fireplaces" className="hover:text-accent">Floor Fireplaces</Link>
-            <Link to="/about" className="hover:text-accent">About</Link>
-            <a href="#contact" onClick={scrollToContact} className="hover:text-accent">Contact</a>
+            <div className="flex items-center space-x-8">
+              <Link to="/category/tables" className="hover:text-accent">Tables</Link>
+              <Link to="/category/lanterns" className="hover:text-accent">Lanterns</Link>
+              <Link to="/category/wall-fireplaces" className="hover:text-accent">Wall Fireplaces</Link>
+              <Link to="/category/floor-fireplaces" className="hover:text-accent">Floor Fireplaces</Link>
+            </div>
+            
+            <Separator orientation="vertical" className="h-6" />
+            
+            <div className="flex items-center space-x-8">
+              <Link to="/about" className="hover:text-accent">About</Link>
+              <a href="#contact" onClick={scrollToContact} className="hover:text-accent">Contact</a>
+            </div>
           </div>
 
           <div className="flex items-center space-x-4">
