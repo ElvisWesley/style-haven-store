@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
-import { ShoppingCart, Menu, User } from "lucide-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, Menu, User, Search } from "lucide-react";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import {
@@ -13,6 +15,13 @@ import {
 const Navbar = () => {
   const { user, signOut } = useAuth();
   const { items } = useCart();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+  };
 
   const scrollToContact = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,6 +38,17 @@ const Navbar = () => {
           <Link to="/" className="text-2xl font-serif">
             Interior Haven
           </Link>
+
+          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+            <Input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          </form>
 
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/category/tables" className="hover:text-accent">Tables</Link>
@@ -76,6 +96,15 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
+                  <form onSubmit={handleSearch} className="p-2">
+                    <Input
+                      type="text"
+                      placeholder="Search products..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full"
+                    />
+                  </form>
                   <DropdownMenuItem asChild>
                     <Link to="/category/tables">Tables</Link>
                   </DropdownMenuItem>
