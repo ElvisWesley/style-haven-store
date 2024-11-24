@@ -13,6 +13,7 @@ import AboutPage from "./pages/AboutPage";
 import SignInForm from "./components/SignInForm";
 import SignUpForm from "./components/SignUpForm";
 import AdminDashboard from "./components/AdminDashboard";
+import SuccessPage from "./pages/SuccessPage";
 import { useAuth } from "./contexts/AuthContext";
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/about" element={<AboutPage />} />
               <Route path="/signin" element={<SignInForm />} />
               <Route path="/signup" element={<SignUpForm />} />
+              <Route path="/success" element={<SuccessPage />} />
               <Route
                 path="/admin"
                 element={
