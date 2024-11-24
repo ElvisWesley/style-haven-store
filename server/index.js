@@ -4,6 +4,7 @@ const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // middleware
 app.use(cors());
@@ -98,6 +99,38 @@ app.post("/api/auth/signin", async (req, res) => {
   }
 });
 
+// Stripe Checkout Route
+app.post("/api/create-checkout-session", async (req, res) => {
+  try {
+    const { items } = req.body;
+
+    const lineItems = items.map((item) => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.name,
+          images: [item.image],
+        },
+        unit_amount: Math.round(item.price * 100), // Convert to cents
+      },
+      quantity: item.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/success`,
+      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/cart`,
+    });
+
+    res.json({ sessionId: session.id });
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ message: "Error creating checkout session" });
+  }
+});
+
 // Admin Routes
 app.post("/api/products", verifyAdmin, async (req, res) => {
   try {
@@ -140,7 +173,6 @@ app.delete("/api/products/:id", verifyAdmin, async (req, res) => {
 });
 
 // Regular Routes
-// Get all products
 app.get("/api/products", async (req, res) => {
   try {
     const allProducts = await pool.query("SELECT * FROM products");
@@ -151,7 +183,6 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
-// Get products by category
 app.get("/api/products/category/:category", async (req, res) => {
   try {
     const { category } = req.params;
@@ -166,7 +197,6 @@ app.get("/api/products/category/:category", async (req, res) => {
   }
 });
 
-// Get single product
 app.get("/api/products/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -181,7 +211,6 @@ app.get("/api/products/:id", async (req, res) => {
   }
 });
 
-// Get all categories
 app.get("/api/categories", async (req, res) => {
   try {
     const allCategories = await pool.query("SELECT * FROM categories");
