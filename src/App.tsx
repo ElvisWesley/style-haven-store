@@ -8,6 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
+import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import AboutPage from "./pages/AboutPage";
 import SignInForm from "./components/SignInForm";
@@ -36,6 +37,7 @@ const App = () => (
             <Sonner />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/products" element={<ProductsPage />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/cart" element={<CartPage />} />
