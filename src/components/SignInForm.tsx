@@ -17,13 +17,13 @@ const SignInForm = () => {
   return (
     <Card className="w-[350px] mx-auto">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>Enter your credentials to access your account</CardDescription>
+        <CardTitle>Logg inn</CardTitle>
+        <CardDescription>Skriv inn dine opplysninger for å få tilgang til kontoen din</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">Email</label>
+            <label htmlFor="email" className="text-sm font-medium">E-post</label>
             <Input
               id="email"
               type="email"
@@ -33,7 +33,7 @@ const SignInForm = () => {
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">Password</label>
+            <label htmlFor="password" className="text-sm font-medium">Passord</label>
             <Input
               id="password"
               type="password"
@@ -44,7 +44,7 @@ const SignInForm = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">Sign In</Button>
+          <Button type="submit" className="w-full">Logg inn</Button>
         </CardFooter>
       </form>
     </Card>

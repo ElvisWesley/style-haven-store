@@ -37,13 +37,13 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-2xl font-serif">
-            Interior Haven
+            Interiør Haven
           </Link>
 
           <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
             <Input
               type="text"
-              placeholder="Search products..."
+              placeholder="Søk produkter..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -53,17 +53,17 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-8">
-              <Link to="/category/tables" className="hover:text-accent">Tables</Link>
-              <Link to="/category/lanterns" className="hover:text-accent">Lanterns</Link>
-              <Link to="/category/wall-fireplaces" className="hover:text-accent">Wall Fireplaces</Link>
-              <Link to="/category/floor-fireplaces" className="hover:text-accent">Floor Fireplaces</Link>
+              <Link to="/category/tables" className="hover:text-accent">Bord</Link>
+              <Link to="/category/lanterns" className="hover:text-accent">Lanterner</Link>
+              <Link to="/category/wall-fireplaces" className="hover:text-accent">Veggpeiser</Link>
+              <Link to="/category/floor-fireplaces" className="hover:text-accent">Gulvpeiser</Link>
             </div>
             
             <Separator orientation="vertical" className="h-6" />
             
             <div className="flex items-center space-x-8">
-              <Link to="/about" className="hover:text-accent">About</Link>
-              <a href="#contact" onClick={scrollToContact} className="hover:text-accent">Contact</a>
+              <Link to="/about" className="hover:text-accent">Om oss</Link>
+              <a href="#contact" onClick={scrollToContact} className="hover:text-accent">Kontakt</a>
             </div>
           </div>
 
@@ -79,19 +79,19 @@ const Navbar = () => {
                   <DropdownMenuItem disabled>{user.email}</DropdownMenuItem>
                   {user.is_admin && (
                     <DropdownMenuItem asChild>
-                      <Link to="/admin">Admin Dashboard</Link>
+                      <Link to="/admin">Admin Dashbord</Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem onClick={() => signOut()}>Sign Out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>Logg ut</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex items-center space-x-4">
                 <Link to="/signin">
-                  <Button variant="ghost">Sign In</Button>
+                  <Button variant="ghost">Logg inn</Button>
                 </Link>
                 <Link to="/signup">
-                  <Button>Sign Up</Button>
+                  <Button>Registrer</Button>
                 </Link>
               </div>
             )}
@@ -107,37 +107,37 @@ const Navbar = () => {
                   <form onSubmit={handleSearch} className="p-2">
                     <Input
                       type="text"
-                      placeholder="Search products..."
+                      placeholder="Søk produkter..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full"
                     />
                   </form>
                   <DropdownMenuItem asChild>
-                    <Link to="/category/tables">Tables</Link>
+                    <Link to="/category/tables">Bord</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/category/lanterns">Lanterns</Link>
+                    <Link to="/category/lanterns">Lanterner</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/category/wall-fireplaces">Wall Fireplaces</Link>
+                    <Link to="/category/wall-fireplaces">Veggpeiser</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/category/floor-fireplaces">Floor Fireplaces</Link>
+                    <Link to="/category/floor-fireplaces">Gulvpeiser</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/about">About</Link>
+                    <Link to="/about">Om oss</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <a href="#contact" onClick={scrollToContact}>Contact</a>
+                    <a href="#contact" onClick={scrollToContact}>Kontakt</a>
                   </DropdownMenuItem>
                   {!user && (
                     <>
                       <DropdownMenuItem asChild>
-                        <Link to="/signin">Sign In</Link>
+                        <Link to="/signin">Logg inn</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/signup">Sign Up</Link>
+                        <Link to="/signup">Registrer</Link>
                       </DropdownMenuItem>
                     </>
                   )}
@@ -145,11 +145,11 @@ const Navbar = () => {
                     <>
                       {user.is_admin && (
                         <DropdownMenuItem asChild>
-                          <Link to="/admin">Admin Dashboard</Link>
+                          <Link to="/admin">Admin Dashbord</Link>
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem onClick={() => signOut()}>
-                        Sign Out
+                        Logg ut
                       </DropdownMenuItem>
                     </>
                   )}
