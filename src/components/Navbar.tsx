@@ -68,33 +68,35 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <User className="h-6 w-6" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem disabled>{user.email}</DropdownMenuItem>
-                  {user.is_admin && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <User className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {user ? (
+                  <>
+                    <DropdownMenuItem disabled>{user.email}</DropdownMenuItem>
+                    {user.is_admin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin">Admin Dashbord</Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem onClick={() => signOut()}>Logg ut</DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
                     <DropdownMenuItem asChild>
-                      <Link to="/admin">Admin Dashbord</Link>
+                      <Link to="/signin">Logg inn</Link>
                     </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem onClick={() => signOut()}>Logg ut</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="hidden md:flex items-center space-x-4">
-                <Link to="/signin">
-                  <Button variant="ghost">Logg inn</Button>
-                </Link>
-                <Link to="/signup">
-                  <Button>Registrer</Button>
-                </Link>
-              </div>
-            )}
+                    <DropdownMenuItem asChild>
+                      <Link to="/signup">Registrer</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <div className="md:hidden">
               <DropdownMenu>
@@ -131,28 +133,6 @@ const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <a href="#contact" onClick={scrollToContact}>Kontakt</a>
                   </DropdownMenuItem>
-                  {!user && (
-                    <>
-                      <DropdownMenuItem asChild>
-                        <Link to="/signin">Logg inn</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/signup">Registrer</Link>
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  {user && (
-                    <>
-                      {user.is_admin && (
-                        <DropdownMenuItem asChild>
-                          <Link to="/admin">Admin Dashbord</Link>
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem onClick={() => signOut()}>
-                        Logg ut
-                      </DropdownMenuItem>
-                    </>
-                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
