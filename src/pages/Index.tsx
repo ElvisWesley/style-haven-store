@@ -15,10 +15,10 @@ const Index = () => {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative container mx-auto h-full flex items-center">
           <div className="max-w-2xl text-white animate-fade-in">
-            <h1 className="text-5xl md:text-6xl font-serif mb-6">Elevate Your Space</h1>
-            <p className="text-xl mb-8">Discover our curated collection of premium interior products</p>
+            <h1 className="text-5xl md:text-6xl font-serif mb-6">Oppgrader ditt hjem</h1>
+            <p className="text-xl mb-8">Utforsk vår premium kolleksjon av høykvalitetsmøbler</p>
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
-              <Link to="/products">Shop Collection</Link>
+              <Link to="/products">Sjekk samlingen</Link>
             </Button>
           </div>
         </div>
@@ -26,7 +26,7 @@ const Index = () => {
 
       {/* Categories Grid */}
       <section className="container mx-auto py-20">
-        <h2 className="text-4xl font-serif text-center mb-12">Shop by Category</h2>
+        <h2 className="text-4xl font-serif text-center mb-12">Handle etter kategori</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {categories.map((category) => (
             <Link
