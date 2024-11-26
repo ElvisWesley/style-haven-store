@@ -80,7 +80,7 @@ const Navbar = () => {
                     <DropdownMenuItem disabled>{user.email}</DropdownMenuItem>
                     {user.is_admin && (
                       <DropdownMenuItem asChild>
-                        <Link to="/admin">Admin Dashbord</Link>
+                        <Link to="/admin">Admin Dashboard</Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem onClick={() => signOut()}>Logg ut</DropdownMenuItem>
