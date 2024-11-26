@@ -20,16 +20,16 @@ const SuccessPage = () => {
       <main className="flex-grow container mx-auto py-12">
         <div className="max-w-md mx-auto text-center space-y-6">
           <CheckCircle className="w-16 h-16 mx-auto text-green-500" />
-          <h1 className="text-3xl font-serif">Payment Successful!</h1>
+          <h1 className="text-3xl font-serif">Betaling Godkjent!</h1>
           <p className="text-gray-600">
-            Thank you for your purchase. Your order has been processed successfully.
+            Takk for din handel! Ordren din er blitt ferdig behandlet.
           </p>
           <div className="space-y-4">
             <Button
               className="w-full"
               onClick={() => navigate("/")}
             >
-              Continue Shopping
+              Fortsett handel
             </Button>
           </div>
         </div>
