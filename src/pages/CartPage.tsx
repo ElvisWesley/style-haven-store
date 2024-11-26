@@ -57,10 +57,10 @@ const CartPage = () => {
         <Navbar />
         <main className="flex-grow container mx-auto py-12">
           <div className="text-center">
-            <h1 className="text-3xl font-serif mb-4">Your Cart is Empty</h1>
-            <p className="text-gray-600 mb-8">Add some products to your cart to see them here.</p>
+            <h1 className="text-3xl font-serif mb-4">Handlekurven er tom</h1>
+            <p className="text-gray-600 mb-8">Legg til noen produkter, så vil du se dem her.</p>
             <Button asChild>
-              <a href="/">Continue Shopping</a>
+              <a href="/">Fortsett handelen</a>
             </Button>
           </div>
         </main>
@@ -73,7 +73,7 @@ const CartPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow container mx-auto py-12">
-        <h1 className="text-3xl font-serif mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-serif mb-8">Handlekurv</h1>
         
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4">
@@ -120,7 +120,7 @@ const CartPage = () => {
           </div>
 
           <div className="bg-gray-50 p-6 rounded-lg h-fit">
-            <h2 className="text-xl font-serif mb-4">Order Summary</h2>
+            <h2 className="text-xl font-serif mb-4">Sammendrag av ordren</h2>
             <div className="space-y-2 mb-4">
               <div className="flex justify-between">
                 <span>Subtotal</span>
