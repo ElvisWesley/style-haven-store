@@ -12,21 +12,21 @@ const AboutPage = () => {
           <section className="space-y-4">
             <h2 className="text-2xl font-serif text-accent">Vår Historie</h2>
             <p className="text-gray-600 leading-relaxed">
-              Grunnlagt med en lidenskap for eksepsjonell interiørdesign, har Interiør Haven blitt en betrodd destinasjon for de som ønsker å forvandle sine boområder. Vi kuraterer nøye vår kolleksjon for å gi deg det fineste innen møbler og interiør.
+              Grunnlagt med en lidenskap for eksepsjonell interiørdesign, har Interiør Haven blitt en betrodd destinasjon for de som ønsker å forvandle sine boområder. Vi velger nøye vår kolleksjon for å gi deg det fineste innen møbler og interiør.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-serif text-accent">Vår Misjon</h2>
+            <h2 className="text-2xl font-serif text-accent">Vår Visjon</h2>
             <p className="text-gray-600 leading-relaxed">
-              Vi tror at hvert hjem forteller en historie, og vår misjon er å hjelpe deg med å fortelle din gjennom nøye utvalgte stykker som gjenspeiler din personlige stil. Vår forpliktelse til kvalitet, design og kundetilfredshet driver alt vi gjør.
+              Vi tror at hvert hjem forteller en historie, og vår visjon er å hjelpe deg med å fortelle din gjennom nøye utvalgte møbler som gjenspeiler din personlige stil. Vår forpliktelse til kvalitet, design og kundetilfredshet driver alt vi gjør.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-serif text-accent">Kvalitet & Håndverk</h2>
             <p className="text-gray-600 leading-relaxed">
-              Hvert stykke i vår kolleksjon er valgt for sin eksepsjonelle kvalitet og håndverk. Vi samarbeider med dyktige håndverkere og anerkjente produsenter som deler vår dedikasjon til å skape møbler og interiør som tåler tidens tann.
+              Hvert stykke i vår kolleksjon er valgt for sin eksepsjonelle kvalitet og håndverk. Vi samarbeider med dyktige håndverkere og anerkjente produsenter som deler vår dedikasjon til å skape møbler og interiør av høy kvalitet.
             </p>
           </section>
 
