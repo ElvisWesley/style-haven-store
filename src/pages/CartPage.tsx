@@ -3,7 +3,6 @@ import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { loadStripe } from "@stripe/stripe-js";
 import { useToast } from "@/components/ui/use-toast";
 
 const CartPage = () => {
@@ -17,7 +16,14 @@ const CartPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({
+          items: items.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          }))
+        }),
       });
 
       if (!response.ok) {
@@ -25,12 +31,17 @@ const CartPage = () => {
       }
 
       const { url } = await response.json();
-      window.location.href = url;
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
     } catch (error) {
+      console.error('Checkout error:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to initiate checkout",
+        description: "Could not initiate checkout. Please try again.",
       });
     }
   };
