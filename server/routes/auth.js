@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs"); // Already using bcryptjs instead of bcrypt
 const jwt = require("jsonwebtoken");
 const pool = require("../db");
 const { verifyAdmin } = require("../middleware/auth");

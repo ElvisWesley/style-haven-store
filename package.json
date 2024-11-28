@@ -64,6 +64,8 @@
     "react-router-dom": "^6.26.2",
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
+    "string-width": "^4.2.3",
+    "strip-ansi": "^6.0.1",
     "stripe": "^17.4.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
