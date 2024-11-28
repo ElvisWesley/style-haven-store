@@ -6,15 +6,13 @@ import Footer from "@/components/Footer";
 import { loadStripe } from "@stripe/stripe-js";
 import { useToast } from "@/components/ui/use-toast";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-
 const CartPage = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
   const { toast } = useToast();
 
   const handleCheckout = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/create-checkout-session', {
+      const response = await fetch('http://localhost:5000/api/checkout/create-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,22 +24,8 @@ const CartPage = () => {
         throw new Error('Network response was not ok');
       }
 
-      const { sessionId } = await response.json();
-      const stripe = await stripePromise;
-      
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
-      }
-
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: error.message,
-        });
-      }
+      const { url } = await response.json();
+      window.location.href = url;
     } catch (error) {
       toast({
         variant: "destructive",
