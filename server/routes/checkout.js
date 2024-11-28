@@ -4,14 +4,10 @@ const { Client } = require("@vippsmobilepay/sdk");
 
 // Initialize Vipps client
 const client = new Client({
-  clientId: process.env.VIPPS_CLIENT_ID,
-  clientSecret: process.env.VIPPS_CLIENT_SECRET,
   merchantSerialNumber: process.env.VIPPS_MSN,
   subscriptionKey: process.env.VIPPS_SUBSCRIPTION_KEY,
-  systemName: "Interior Haven",
-  systemVersion: "1.0.0",
-  pluginName: "vipps-ecom",
-  pluginVersion: "1.0.0",
+  useTestMode: true, // Set to false in production
+  retryRequests: true,
 });
 
 router.post("/create-session", async (req, res) => {
@@ -23,26 +19,34 @@ router.post("/create-session", async (req, res) => {
       0
     );
 
-    const session = await client.checkout.initiateSession({
-      merchantInfo: {
-        callbackPrefix: process.env.SERVER_URL || "http://localhost:5000",
-        returnUrl: `${process.env.CLIENT_URL || "http://localhost:5173"}/success`,
-        merchantSerialNumber: process.env.VIPPS_MSN,
-      },
-      transaction: {
-        amount: {
-          currency: "NOK",
-          value: totalAmount,
+    // Get access token first
+    const accessToken = await client.auth.getToken(
+      process.env.VIPPS_CLIENT_ID,
+      process.env.VIPPS_CLIENT_SECRET
+    );
+
+    // Create checkout session
+    const checkout = await client.checkout.create(
+      process.env.VIPPS_CLIENT_ID,
+      process.env.VIPPS_CLIENT_SECRET,
+      {
+        merchantInfo: {
+          callbackUrl: `${process.env.SERVER_URL || "http://localhost:5000"}/api/checkout/callback`,
+          returnUrl: `${process.env.CLIENT_URL || "http://localhost:5173"}/success`,
         },
-        paymentDescription: "Interior Haven Purchase",
-        reference: Date.now().toString(),
-      },
-      scope: "address name email",
-    });
+        transaction: {
+          amount: {
+            currency: "NOK",
+            value: totalAmount,
+          },
+          paymentDescription: "Interior Haven Purchase",
+        },
+      }
+    );
 
     res.json({ 
-      sessionId: session.sessionId,
-      url: session.checkoutFrontendUrl 
+      sessionId: checkout.sessionId,
+      url: checkout.url 
     });
   } catch (error) {
     console.error('Error creating Vipps checkout session:', error);
