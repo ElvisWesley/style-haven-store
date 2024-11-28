@@ -11,10 +11,12 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch('http://localhost:5000/api/checkout/create-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           items: items.map(item => ({
@@ -27,7 +29,8 @@ const CartPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Checkout failed');
       }
 
       const { url } = await response.json();
@@ -40,8 +43,8 @@ const CartPage = () => {
       console.error('Checkout error:', error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Could not initiate checkout. Please try again.",
+        title: "Checkout Error",
+        description: error instanceof Error ? error.message : "Could not initiate checkout. Please try again.",
       });
     }
   };

@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for stored token and user data
     const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
     
@@ -55,7 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         title: "Error signing in",
         description: error instanceof Error ? error.message : "Please check your credentials and try again.",
       });
-      throw error;
     }
   };
 
@@ -91,30 +89,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         title: "Error creating account",
         description: error instanceof Error ? error.message : "Please try again later.",
       });
-      throw error;
     }
   };
 
-  const signOut = async () => {
-    try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      setUser(null);
-      
-      toast({
-        title: "Signed out successfully",
-        description: "See you soon!",
-      });
-      
-      navigate("/");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error signing out",
-        description: "Please try again later.",
-      });
-      throw error;
-    }
+  const signOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    
+    toast({
+      title: "Signed out successfully",
+      description: "See you soon!",
+    });
+    
+    navigate("/");
   };
 
   return (
