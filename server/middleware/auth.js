@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const pool = require("../db");
+import jwt from 'jsonwebtoken';
+import pool from '../db.js';
 
-const verifyAdmin = async (req, res, next) => {
+export const verifyAdmin = async (req, res, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
@@ -21,5 +21,3 @@ const verifyAdmin = async (req, res, next) => {
     res.status(401).json({ message: "Invalid token" });
   }
 };
-
-module.exports = { verifyAdmin };

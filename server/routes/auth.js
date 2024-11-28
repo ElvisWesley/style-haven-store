@@ -1,9 +1,10 @@
-const express = require("express");
+import express from 'express';
+import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import pool from '../db.js';
+import { verifyAdmin } from '../middleware/auth.js';
+
 const router = express.Router();
-const bcrypt = require("bcryptjs"); // Already using bcryptjs instead of bcrypt
-const jwt = require("jsonwebtoken");
-const pool = require("../db");
-const { verifyAdmin } = require("../middleware/auth");
 
 router.post("/signup", async (req, res) => {
   try {
@@ -18,8 +19,8 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
 
     const newUser = await pool.query(
       "INSERT INTO users (email, password, name, is_admin) VALUES ($1, $2, $3, false) RETURNING id, email, name, is_admin",
@@ -52,7 +53,7 @@ router.post("/signin", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const validPassword = await bcrypt.compare(password, user.rows[0].password);
+    const validPassword = await bcryptjs.compare(password, user.rows[0].password);
     if (!validPassword) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -71,4 +72,4 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,13 +1,15 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-require("dotenv").config();
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 // Import routes
-const authRoutes = require("./routes/auth");
-const productRoutes = require("./routes/products");
-const categoryRoutes = require("./routes/categories");
-const checkoutRoutes = require("./routes/checkout");
+import authRoutes from './routes/auth.js';
+import productRoutes from './routes/products.js';
+import categoryRoutes from './routes/categories.js';
+import checkoutRoutes from './routes/checkout.js';
+
+const app = express();
+dotenv.config();
 
 // middleware
 app.use(cors());

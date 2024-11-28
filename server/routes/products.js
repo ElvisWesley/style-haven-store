@@ -1,7 +1,8 @@
-const express = require("express");
+import express from 'express';
+import pool from '../db.js';
+import { verifyAdmin } from '../middleware/auth.js';
+
 const router = express.Router();
-const pool = require("../db");
-const { verifyAdmin } = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
   try {
@@ -81,4 +82,4 @@ router.delete("/:id", verifyAdmin, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
