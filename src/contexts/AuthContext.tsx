@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Authentication failed");
+        throw new Error(data.message || "Invalid credentials");
       }
 
       localStorage.setItem("token", data.token);
@@ -49,12 +49,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       navigate("/");
     } catch (error) {
+      let errorMessage = "Failed to sign in. Please check your credentials.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to sign in. Please check your credentials.",
+        description: errorMessage,
       });
-      throw error;
     }
   };
 
@@ -85,16 +89,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       navigate("/");
     } catch (error) {
+      let errorMessage = "Failed to create account. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create account. Please try again.",
+        description: errorMessage,
       });
-      throw error;
     }
   };
 
-  const signOut = async () => {
+  const signOut = () => {
     return new Promise<void>((resolve) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
