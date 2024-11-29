@@ -10,6 +10,10 @@ router.post("/signup", async (req, res) => {
   try {
     const { email, password, name } = req.body;
     
+    if (!email || !password || !name) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    
     const userExists = await pool.query(
       "SELECT * FROM users WHERE email = $1",
       [email]
@@ -33,7 +37,7 @@ router.post("/signup", async (req, res) => {
       { expiresIn: '1d' }
     );
 
-    res.json({ user: newUser.rows[0], token });
+    res.status(201).json({ user: newUser.rows[0], token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
@@ -43,6 +47,10 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
 
     const user = await pool.query(
       "SELECT * FROM users WHERE email = $1",
@@ -50,12 +58,12 @@ router.post("/signin", async (req, res) => {
     );
 
     if (user.rows.length === 0) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const validPassword = await bcryptjs.compare(password, user.rows[0].password);
     if (!validPassword) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const token = jwt.sign(
@@ -65,7 +73,7 @@ router.post("/signin", async (req, res) => {
     );
 
     const { password: _, ...userWithoutPassword } = user.rows[0];
-    res.json({ user: userWithoutPassword, token });
+    res.status(200).json({ user: userWithoutPassword, token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });

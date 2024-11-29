@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to sign in");
+        throw new Error(data.message || "Authentication failed");
       }
 
       localStorage.setItem("token", data.token);
@@ -43,17 +43,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(data.user);
       
       toast({
-        title: "Signed in successfully",
-        description: "Welcome back!",
+        title: "Success",
+        description: "Signed in successfully!",
       });
       
       navigate("/");
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error signing in",
-        description: error instanceof Error ? error.message : "Please check your credentials and try again.",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to sign in. Please check your credentials.",
       });
+      throw error;
     }
   };
 
@@ -78,17 +79,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(data.user);
       
       toast({
-        title: "Account created successfully",
-        description: "Welcome to Interior Haven!",
+        title: "Success",
+        description: "Account created successfully!",
       });
       
       navigate("/");
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error creating account",
-        description: error instanceof Error ? error.message : "Please try again later.",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create account. Please try again.",
       });
+      throw error;
     }
   };
 
@@ -99,8 +101,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       
       toast({
-        title: "Signed out successfully",
-        description: "See you soon!",
+        title: "Success",
+        description: "Signed out successfully!",
       });
       
       navigate("/");
