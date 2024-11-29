@@ -92,17 +92,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const signOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    
-    toast({
-      title: "Signed out successfully",
-      description: "See you soon!",
+  const signOut = async () => {
+    return new Promise<void>((resolve) => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
+      
+      toast({
+        title: "Signed out successfully",
+        description: "See you soon!",
+      });
+      
+      navigate("/");
+      resolve();
     });
-    
-    navigate("/");
   };
 
   return (
