@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import ProductForm from "./admin/ProductForm";
 import ProductList from "./admin/ProductList";
 
@@ -9,6 +12,7 @@ const AdminDashboard = () => {
   const { toast } = useToast();
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const { data: products, refetch } = useQuery({
     queryKey: ["products"],
@@ -93,7 +97,14 @@ const AdminDashboard = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-8">
+      <div className="flex items-center gap-4 mb-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate("/")}
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </Button>
         <Input
           type="search"
           placeholder="Search products..."
