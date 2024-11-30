@@ -19,38 +19,36 @@ router.post("/create-session", async (req, res) => {
       0
     );
 
-    // Get access token first
-    const accessToken = await client.auth.getToken(
-      process.env.VIPPS_CLIENT_ID,
-      process.env.VIPPS_CLIENT_SECRET
-    );
-
     // Create checkout session
-    const checkout = await client.checkout.create(
-      process.env.VIPPS_CLIENT_ID,
-      process.env.VIPPS_CLIENT_SECRET,
-      {
-        merchantInfo: {
-          callbackUrl: `${process.env.SERVER_URL || "http://localhost:5000"}/api/checkout/callback`,
-          returnUrl: `${process.env.CLIENT_URL || "http://localhost:5173"}/success`,
+    const session = await client.checkout.initiate({
+      merchantInfo: {
+        callbackPrefix: `${process.env.SERVER_URL || "http://localhost:5000"}/api/checkout/callback`,
+        returnUrl: `${process.env.CLIENT_URL || "http://localhost:5173"}/success`,
+        merchantSerialNumber: process.env.VIPPS_MSN,
+      },
+      transaction: {
+        amount: {
+          currency: "NOK",
+          value: totalAmount,
         },
-        transaction: {
-          amount: {
-            currency: "NOK",
-            value: totalAmount,
-          },
-          paymentDescription: "Interior Haven Purchase",
-        },
-      }
-    );
+        paymentDescription: "Interior Haven Purchase",
+      },
+    });
+
+    if (!session.redirectUrl) {
+      throw new Error("No checkout URL received from Vipps");
+    }
 
     res.json({ 
-      sessionId: checkout.sessionId,
-      url: checkout.url 
+      sessionId: session.reference,
+      url: session.redirectUrl 
     });
   } catch (error) {
     console.error('Error creating Vipps checkout session:', error);
-    res.status(500).json({ message: "Error creating checkout session" });
+    res.status(500).json({ 
+      message: "Error creating checkout session",
+      error: error.message 
+    });
   }
 });
 

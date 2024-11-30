@@ -29,16 +29,16 @@ const CartPage = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Checkout failed');
+        throw new Error('Checkout session creation failed');
       }
 
-      const { url } = await response.json();
-      if (url) {
-        window.location.href = url;
-      } else {
+      const data = await response.json();
+      
+      if (!data.url) {
         throw new Error('No checkout URL received');
       }
+
+      window.location.href = data.url;
     } catch (error) {
       console.error('Checkout error:', error);
       toast({
