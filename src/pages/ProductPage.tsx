@@ -2,15 +2,14 @@ import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import ProductImages from "@/components/product/ProductImages";
+import ProductTabs from "@/components/product/ProductTabs";
+import ProductEditForm from "@/components/product/ProductEditForm";
 import { useState } from "react";
 
 interface Product {
@@ -67,16 +66,16 @@ const ProductPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["product", id] });
       toast({
-        title: "Success",
-        description: "Product updated successfully",
+        title: "Suksess",
+        description: "Produktet ble oppdatert",
       });
       setIsEditing(false);
     },
     onError: () => {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to update product",
+        title: "Feil",
+        description: "Kunne ikke oppdatere produktet",
       });
     },
   });
@@ -89,7 +88,27 @@ const ProductPage = () => {
   const handleAddToCart = () => {
     if (product) {
       addItem(product, 1);
+      toast({
+        title: "Lagt til i handlekurv",
+        description: `${product.name} ble lagt til i handlekurven`,
+      });
     }
+  };
+
+  const handleProductChange = (field: string, value: string | number) => {
+    setEditedProduct(prev => prev ? {
+      ...prev,
+      [field]: value
+    } : null);
+  };
+
+  const handleImageUpdate = (index: number, value: string) => {
+    setEditedProduct(prev => {
+      if (!prev) return null;
+      const newImages = [...prev.images];
+      newImages[index] = value;
+      return { ...prev, images: newImages };
+    });
   };
 
   if (isLoading) {
@@ -116,133 +135,45 @@ const ProductPage = () => {
       <Navbar />
       <main className="flex-grow container mx-auto py-12">
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="aspect-square overflow-hidden rounded-lg">
-              {isEditing ? (
-                <Input
-                  value={editedProduct?.images[0] || ""}
-                  onChange={(e) =>
-                    setEditedProduct(prev => prev ? {
-                      ...prev,
-                      images: [e.target.value, ...prev.images.slice(1)]
-                    } : null)
-                  }
-                  placeholder="Image URL"
-                />
-              ) : (
-                <img
-                  src={product?.images[0]}
-                  alt={product?.name}
-                  className="w-full h-full object-cover"
-                />
-              )}
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {product?.images.map((image, index) => (
-                <div key={index} className="aspect-square overflow-hidden rounded-lg">
-                  <img
-                    src={image}
-                    alt={`${product.name} view ${index + 1}`}
-                    className="w-full h-full object-cover cursor-pointer hover:opacity-80"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <ProductImages
+            images={product?.images || []}
+            isEditing={isEditing}
+            onImageUpdate={handleImageUpdate}
+            productName={product?.name || ""}
+          />
 
           <div className="space-y-6">
             {isEditing ? (
-              <>
-                <Input
-                  value={editedProduct?.name || ""}
-                  onChange={(e) =>
-                    setEditedProduct(prev => prev ? {
-                      ...prev,
-                      name: e.target.value
-                    } : null)
-                  }
-                  placeholder="Product Name"
-                />
-                <Input
-                  type="number"
-                  value={editedProduct?.price || ""}
-                  onChange={(e) =>
-                    setEditedProduct(prev => prev ? {
-                      ...prev,
-                      price: parseFloat(e.target.value)
-                    } : null)
-                  }
-                  placeholder="Price"
-                />
-                <Textarea
-                  value={editedProduct?.description || ""}
-                  onChange={(e) =>
-                    setEditedProduct(prev => prev ? {
-                      ...prev,
-                      description: e.target.value
-                    } : null)
-                  }
-                  placeholder="Description"
-                />
-              </>
+              <ProductEditForm
+                product={editedProduct as Product}
+                onChange={handleProductChange}
+              />
             ) : (
               <>
                 <h1 className="text-4xl font-serif">{product?.name}</h1>
-                <p className="text-2xl text-accent">${product?.price}</p>
+                <p className="text-2xl text-accent">{product?.price} kr</p>
                 <p className="text-gray-600">{product?.description}</p>
               </>
             )}
 
-            <Tabs defaultValue="details">
-              <TabsList>
-                <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="specifications">Specifications</TabsTrigger>
-                <TabsTrigger value="video">Video</TabsTrigger>
-              </TabsList>
-              <TabsContent value="details" className="mt-4">
-                <Card className="p-4">
-                  <p>{product?.description}</p>
-                </Card>
-              </TabsContent>
-              <TabsContent value="specifications" className="mt-4">
-                <Card className="p-4">
-                  <dl className="space-y-2">
-                    {product?.specifications &&
-                      Object.entries(product.specifications).map(([key, value]) => (
-                        <div key={key} className="grid grid-cols-2">
-                          <dt className="font-medium capitalize">{key}</dt>
-                          <dd>{String(value)}</dd>
-                        </div>
-                      ))}
-                  </dl>
-                </Card>
-              </TabsContent>
-              <TabsContent value="video" className="mt-4">
-                <Card className="p-4">
-                  <div className="aspect-video">
-                    <iframe
-                      src={product?.video_url}
-                      className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                </Card>
-              </TabsContent>
-            </Tabs>
+            <ProductTabs
+              description={product?.description || ""}
+              specifications={product?.specifications || {}}
+              videoUrl={product?.video_url}
+            />
 
             <div className="flex gap-4">
               {user?.is_admin ? (
                 <>
                   {isEditing ? (
                     <>
-                      <Button onClick={handleSaveChanges}>Save Changes</Button>
+                      <Button onClick={handleSaveChanges}>Lagre endringer</Button>
                       <Button variant="outline" onClick={() => setIsEditing(false)}>
-                        Cancel
+                        Avbryt
                       </Button>
                     </>
                   ) : (
-                    <Button onClick={() => setIsEditing(true)}>Edit Product</Button>
+                    <Button onClick={() => setIsEditing(true)}>Rediger produkt</Button>
                   )}
                 </>
               ) : null}
@@ -251,7 +182,7 @@ const ProductPage = () => {
                 className="w-full bg-accent hover:bg-accent/90"
                 onClick={handleAddToCart}
               >
-                Add to Cart
+                Legg til i handlekurv
               </Button>
             </div>
           </div>
