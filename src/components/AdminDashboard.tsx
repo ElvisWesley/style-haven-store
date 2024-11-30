@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 import ProductForm from "./admin/ProductForm";
 import ProductList from "./admin/ProductList";
 
 const AdminDashboard = () => {
   const { toast } = useToast();
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: products, refetch } = useQuery({
     queryKey: ["products"],
@@ -16,6 +18,12 @@ const AdminDashboard = () => {
       return response.json();
     },
   });
+
+  const filteredProducts = products?.filter((product: any) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -85,13 +93,22 @@ const AdminDashboard = () => {
 
   return (
     <div className="container mx-auto py-8">
+      <div className="mb-8">
+        <Input
+          type="search"
+          placeholder="Search products..."
+          className="max-w-md"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
       <ProductForm
         editingProduct={editingProduct}
         onSubmit={handleSubmit}
         onCancel={() => setEditingProduct(null)}
       />
       <ProductList
-        products={products}
+        products={filteredProducts}
         onEdit={setEditingProduct}
         onDelete={handleDelete}
       />
