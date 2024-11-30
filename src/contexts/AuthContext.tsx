@@ -22,6 +22,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(false);
   }, []);
 
+  const handleAuthError = async (response: Response) => {
+    const data = await response.json();
+    throw new Error(data.message || "Authentication failed");
+  };
+
   const signIn = async (email: string, password: string) => {
     try {
       const response = await fetch("http://localhost:5000/api/auth/signin", {
@@ -32,12 +37,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || "Invalid credentials");
+        await handleAuthError(response);
       }
 
+      const data = await response.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
@@ -72,12 +76,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         body: JSON.stringify({ email, password, name }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create account");
+        await handleAuthError(response);
       }
 
+      const data = await response.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
