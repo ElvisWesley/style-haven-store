@@ -16,10 +16,18 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
     if (editingProduct?.specifications) {
       return {
         ...editingProduct.specifications,
-        dimensions: editingProduct.specifications.dimensions || ""
+        dimensions: editingProduct.specifications.dimensions || "",
+        weight: editingProduct.specifications.weight || "",
+        material: editingProduct.specifications.material || "",
+        finish: editingProduct.specifications.finish || "",
       };
     }
-    return { dimensions: "" };
+    return {
+      dimensions: "",
+      weight: "",
+      material: "",
+      finish: "",
+    };
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,8 +36,10 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
     const formData = new FormData(form);
     
     const updatedSpecs = {
-      ...specifications,
-      dimensions: formData.get("dimensions")
+      dimensions: formData.get("dimensions"),
+      weight: formData.get("weight"),
+      material: formData.get("material"),
+      finish: formData.get("finish"),
     };
     
     formData.set("specifications", JSON.stringify(updatedSpecs));
@@ -94,6 +104,39 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
               name="dimensions"
               placeholder="e.g., 72 L x 36 W x 30 H"
               defaultValue={specifications.dimensions}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="weight">Weight</Label>
+            <Input
+              id="weight"
+              name="weight"
+              placeholder="e.g., 120 lbs"
+              defaultValue={specifications.weight}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="material">Material</Label>
+            <Input
+              id="material"
+              name="material"
+              placeholder="e.g., Solid Oak"
+              defaultValue={specifications.material}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="finish">Finish</Label>
+            <Input
+              id="finish"
+              name="finish"
+              placeholder="e.g., Natural Matte"
+              defaultValue={specifications.finish}
               required
             />
           </div>
