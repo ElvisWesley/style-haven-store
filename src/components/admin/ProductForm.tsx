@@ -27,7 +27,6 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     
-    // Update specifications with dimensions
     const updatedSpecs = {
       ...specifications,
       dimensions: formData.get("dimensions")
@@ -93,7 +92,7 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
             <Input
               id="dimensions"
               name="dimensions"
-              placeholder="e.g., 72\" L x 36\" W x 30\" H"
+              placeholder="e.g., 72 L x 36 W x 30 H"
               defaultValue={specifications.dimensions}
               required
             />
