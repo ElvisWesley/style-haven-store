@@ -19,19 +19,19 @@ const ProductList = ({ products, onEdit, onDelete }: ProductListProps) => {
               className="w-full h-48 object-cover rounded-lg mb-4"
             />
             <h3 className="font-semibold">{product.name}</h3>
-            <p className="text-sm text-gray-600 mb-2">${product.price}</p>
+            <p className="text-sm text-gray-600 mb-2">{product.price} kr</p>
             <p className="text-sm text-gray-600 mb-4">
-              Dimensions: {product.specifications?.dimensions || "Not specified"}
+              Dimensjoner: {product.specifications?.dimensions || "Ikke spesifisert"}
             </p>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => onEdit(product)}>
-                Edit
+                Rediger
               </Button>
               <Button
                 variant="destructive"
                 onClick={() => onDelete(product.id)}
               >
-                Delete
+                Slett
               </Button>
             </div>
           </CardContent>

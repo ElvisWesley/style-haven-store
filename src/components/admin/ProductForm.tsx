@@ -50,13 +50,13 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
     <Card>
       <CardHeader>
         <CardTitle>
-          {editingProduct ? "Edit Product" : "Add New Product"}
+          {editingProduct ? "Rediger Produkt" : "Legg til nytt produkt"}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Product Name</Label>
+            <Label htmlFor="name">Produktnavn</Label>
             <Input
               id="name"
               name="name"
@@ -66,7 +66,7 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="price">Price</Label>
+            <Label htmlFor="price">Pris</Label>
             <Input
               id="price"
               name="price"
@@ -78,7 +78,7 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Beskrivelse</Label>
             <Textarea
               id="description"
               name="description"
@@ -88,7 +88,7 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">Kategori</Label>
             <Input
               id="category"
               name="category"
@@ -98,51 +98,51 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dimensions">Dimensions</Label>
+            <Label htmlFor="dimensions">Dimensjoner</Label>
             <Input
               id="dimensions"
               name="dimensions"
-              placeholder="e.g., 72 L x 36 W x 30 H"
+              placeholder="f.eks. 72 L x 36 B x 30 H"
               defaultValue={specifications.dimensions}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="weight">Weight</Label>
+            <Label htmlFor="weight">Vekt</Label>
             <Input
               id="weight"
               name="weight"
-              placeholder="e.g., 120 lbs"
+              placeholder="f.eks. 120 kg"
               defaultValue={specifications.weight}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="material">Material</Label>
+            <Label htmlFor="material">Materiale</Label>
             <Input
               id="material"
               name="material"
-              placeholder="e.g., Solid Oak"
+              placeholder="f.eks. Massiv Eik"
               defaultValue={specifications.material}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="finish">Finish</Label>
+            <Label htmlFor="finish">Overflatebehandling</Label>
             <Input
               id="finish"
               name="finish"
-              placeholder="e.g., Natural Matte"
+              placeholder="f.eks. Naturlig Matt"
               defaultValue={specifications.finish}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Image URL</Label>
+            <Label htmlFor="image">Bilde URL</Label>
             <Input
               id="image"
               name="image"
@@ -162,11 +162,11 @@ const ProductForm = ({ editingProduct, onSubmit, onCancel }: ProductFormProps) =
 
           <div className="flex gap-2">
             <Button type="submit">
-              {editingProduct ? "Update" : "Add"} Product
+              {editingProduct ? "Oppdater" : "Legg til"} Produkt
             </Button>
             {editingProduct && (
               <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
+                Avbryt
               </Button>
             )}
           </div>

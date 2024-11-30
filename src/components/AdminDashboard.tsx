@@ -18,7 +18,7 @@ const AdminDashboard = () => {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch("http://localhost:5000/api/products");
-      if (!response.ok) throw new Error("Failed to fetch products");
+      if (!response.ok) throw new Error("Kunne ikke hente produkter");
       return response.json();
     },
   });
@@ -54,18 +54,18 @@ const AdminDashboard = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to save product");
+      if (!response.ok) throw new Error("Kunne ikke lagre produkt");
 
       toast({
-        title: `Product ${editingProduct ? "updated" : "created"} successfully`,
+        title: `Produkt ${editingProduct ? "oppdatert" : "opprettet"} vellykket`,
       });
       setEditingProduct(null);
       refetch();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to save product",
+        title: "Feil",
+        description: "Kunne ikke lagre produkt",
       });
     }
   };
@@ -80,17 +80,17 @@ const AdminDashboard = () => {
         },
       });
 
-      if (!response.ok) throw new Error("Failed to delete product");
+      if (!response.ok) throw new Error("Kunne ikke slette produkt");
 
       toast({
-        title: "Product deleted successfully",
+        title: "Produkt slettet vellykket",
       });
       refetch();
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to delete product",
+        title: "Feil",
+        description: "Kunne ikke slette produkt",
       });
     }
   };
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
         </Button>
         <Input
           type="search"
-          placeholder="Search products..."
+          placeholder="Søk produkter..."
           className="max-w-md"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

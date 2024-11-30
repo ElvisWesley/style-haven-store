@@ -13,7 +13,7 @@ const ProductsPage = () => {
     queryFn: async () => {
       const response = await fetch("http://localhost:5000/api/products");
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Kunne ikke hente produkter");
       }
       return response.json();
     },
@@ -57,7 +57,7 @@ const ProductsPage = () => {
                     </div>
                     <div className="p-4">
                       <h3 className="font-serif text-lg mb-2">{product.name}</h3>
-                      <p className="text-accent font-medium">${product.price}</p>
+                      <p className="text-accent font-medium">{product.price} kr</p>
                     </div>
                   </Link>
                 </CardContent>
