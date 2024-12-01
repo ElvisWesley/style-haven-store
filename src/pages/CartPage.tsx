@@ -5,14 +5,17 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/components/ui/use-toast";
 
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
+
 const CartPage = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
   const { toast } = useToast();
 
   const handleCheckout = async () => {
     try {
+      console.log('Initiating checkout with server URL:', SERVER_URL);
       const token = localStorage.getItem("token");
-      const response = await fetch('http://localhost:5000/api/checkout/create-session', {
+      const response = await fetch(`${SERVER_URL}/api/checkout/create-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,10 +32,13 @@ const CartPage = () => {
       });
 
       if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Checkout error response:', errorData);
         throw new Error('Checkout session creation failed');
       }
 
       const data = await response.json();
+      console.log('Checkout session created:', data);
       
       if (!data.url) {
         throw new Error('No checkout URL received');
