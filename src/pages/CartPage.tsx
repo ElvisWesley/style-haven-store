@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 import MockCheckout from "@/components/cart/MockCheckout";
@@ -15,6 +15,19 @@ const CartPage = () => {
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState<'vipps' | 'klarna'>('vipps');
   const [showMockCheckout, setShowMockCheckout] = useState(false);
+
+  useEffect(() => {
+    // Add Klarna script when component mounts
+    const script = document.createElement('script');
+    script.src = 'https://x.klarnacdn.net/kp/lib/v1/api.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Cleanup on unmount
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleCheckout = async () => {
     try {
