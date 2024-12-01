@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -9,7 +9,7 @@ import categoryRoutes from './routes/categories.js';
 import checkoutRoutes from './routes/checkout.js';
 
 const app = express();
-dotenv.config();
+config();
 
 // middleware
 app.use(cors());

@@ -8,7 +8,7 @@ const client = new Client({
   subscriptionKey: process.env.VIPPS_SUBSCRIPTION_KEY,
   systemName: "Interior Haven",
   systemVersion: "1.0.0",
-  useTestMode: true, // Set to false in production
+  useTestMode: true,
   retryRequests: true,
 });
 
@@ -22,16 +22,6 @@ router.post("/create-session", async (req, res) => {
       0
     );
 
-    // Get access token
-    const accessToken = await client.auth.getToken(
-      process.env.VIPPS_CLIENT_ID,
-      process.env.VIPPS_CLIENT_SECRET
-    );
-
-    if (!accessToken.ok) {
-      throw new Error("Failed to get Vipps access token");
-    }
-
     // Create checkout session
     const checkoutSession = await client.checkout.create(
       process.env.VIPPS_CLIENT_ID,
@@ -39,8 +29,8 @@ router.post("/create-session", async (req, res) => {
       {
         type: "PAYMENT",
         merchantInfo: {
-          callbackUrl: `${process.env.SERVER_URL || "http://localhost:5000"}/api/checkout/callback`,
-          returnUrl: `${process.env.CLIENT_URL || "http://localhost:5173"}/success`,
+          callbackUrl: `${process.env.SERVER_URL}/api/checkout/callback`,
+          returnUrl: `${process.env.CLIENT_URL}/success`,
           callbackAuthorizationToken: process.env.VIPPS_CALLBACK_TOKEN,
         },
         transaction: {
@@ -70,18 +60,10 @@ router.post("/create-session", async (req, res) => {
   }
 });
 
-// Callback endpoint for Vipps to notify about payment status
 router.post("/callback", async (req, res) => {
   try {
     const { reference, status } = req.body;
-    
-    // Here you would typically:
-    // 1. Verify the callback authorization token
-    // 2. Update order status in your database
-    // 3. Send confirmation email to customer
-    
     console.log(`Payment ${reference} status updated to: ${status}`);
-    
     res.status(200).send();
   } catch (error) {
     console.error('Error processing Vipps callback:', error);
