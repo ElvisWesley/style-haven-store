@@ -1,19 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, Trash2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/components/ui/use-toast";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
-
-declare global {
-  interface Window {
-    Klarna?: any;
-    klarnaAsyncCallback?: () => void;
-  }
-}
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import CartItem from "@/components/cart/CartItem";
+import CartSummary from "@/components/cart/CartSummary";
+import MockCheckout from "@/components/cart/MockCheckout";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
@@ -21,25 +14,7 @@ const CartPage = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState<'vipps' | 'klarna'>('vipps');
-  const [klarnaLoaded, setKlarnaLoaded] = useState(false);
-
-  useEffect(() => {
-    // Initialize Klarna SDK
-    const script = document.createElement('script');
-    script.src = 'https://x.klarnacdn.net/kp/lib/v1/api.js';
-    script.async = true;
-    
-    window.klarnaAsyncCallback = () => {
-      setKlarnaLoaded(true);
-    };
-    
-    document.body.appendChild(script);
-    
-    return () => {
-      document.body.removeChild(script);
-      delete window.klarnaAsyncCallback;
-    };
-  }, []);
+  const [showMockCheckout, setShowMockCheckout] = useState(false);
 
   const handleCheckout = async () => {
     try {
@@ -64,21 +39,16 @@ const CartPage = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Checkout error response:', errorData);
         throw new Error('Checkout session creation failed');
       }
 
       const data = await response.json();
-      console.log('Checkout session created:', data);
       
       if (paymentMethod === 'klarna' && window.Klarna) {
-        // Initialize Klarna payment
         await window.Klarna.Payments.init({
           client_token: data.clientToken
         });
         
-        // Load Klarna payment methods
         await window.Klarna.Payments.load({
           container: '#klarna-payments-container'
         });
@@ -92,8 +62,9 @@ const CartPage = () => {
       toast({
         variant: "destructive",
         title: "Checkout Error",
-        description: error instanceof Error ? error.message : "Could not initiate checkout. Please try again.",
+        description: "An error occurred. Starting mock checkout process...",
       });
+      setShowMockCheckout(true);
     }
   };
 
@@ -124,97 +95,28 @@ const CartPage = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4">
             {items.map((item) => (
-              <div
+              <CartItem
                 key={item.id}
-                className="flex items-center space-x-4 border rounded-lg p-4"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-24 h-24 object-cover rounded"
-                />
-                <div className="flex-grow">
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-gray-600">${item.price}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-8 text-center">{item.quantity}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+                {...item}
+                updateQuantity={updateQuantity}
+                removeItem={removeItem}
+              />
             ))}
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg h-fit">
-            <h2 className="text-xl font-serif mb-4">Sammendrag av ordren</h2>
-            <div className="space-y-2 mb-4">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>Free</span>
-              </div>
-              <div className="border-t pt-2 font-medium">
-                <div className="flex justify-between">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <RadioGroup
-                value={paymentMethod}
-                onValueChange={(value) => setPaymentMethod(value as 'vipps' | 'klarna')}
-                className="space-y-2"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="vipps" id="vipps" />
-                  <Label htmlFor="vipps">Vipps</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="klarna" id="klarna" />
-                  <Label htmlFor="klarna">Klarna</Label>
-                </div>
-              </RadioGroup>
-
-              {paymentMethod === 'klarna' && (
-                <div id="klarna-payments-container" className="min-h-[200px]" />
-              )}
-
-              <Button 
-                className="w-full"
-                onClick={handleCheckout}
-              >
-                Proceed to Checkout
-              </Button>
-            </div>
-          </div>
+          <CartSummary
+            total={total}
+            paymentMethod={paymentMethod}
+            onPaymentMethodChange={setPaymentMethod}
+            onCheckout={handleCheckout}
+          />
         </div>
       </main>
       <Footer />
+      
+      {showMockCheckout && (
+        <MockCheckout onClose={() => setShowMockCheckout(false)} />
+      )}
     </div>
   );
 };
