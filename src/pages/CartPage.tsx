@@ -4,17 +4,48 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/components/ui/use-toast";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { useEffect, useState } from "react";
+
+declare global {
+  interface Window {
+    Klarna?: any;
+    klarnaAsyncCallback?: () => void;
+  }
+}
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
 const CartPage = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
   const { toast } = useToast();
+  const [paymentMethod, setPaymentMethod] = useState<'vipps' | 'klarna'>('vipps');
+  const [klarnaLoaded, setKlarnaLoaded] = useState(false);
+
+  useEffect(() => {
+    // Initialize Klarna SDK
+    const script = document.createElement('script');
+    script.src = 'https://x.klarnacdn.net/kp/lib/v1/api.js';
+    script.async = true;
+    
+    window.klarnaAsyncCallback = () => {
+      setKlarnaLoaded(true);
+    };
+    
+    document.body.appendChild(script);
+    
+    return () => {
+      document.body.removeChild(script);
+      delete window.klarnaAsyncCallback;
+    };
+  }, []);
 
   const handleCheckout = async () => {
     try {
       console.log('Initiating checkout with server URL:', SERVER_URL);
       const token = localStorage.getItem("token");
+      
       const response = await fetch(`${SERVER_URL}/api/checkout/create-session`, {
         method: 'POST',
         headers: {
@@ -22,6 +53,7 @@ const CartPage = () => {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
+          paymentMethod,
           items: items.map(item => ({
             id: item.id,
             name: item.name,
@@ -40,11 +72,21 @@ const CartPage = () => {
       const data = await response.json();
       console.log('Checkout session created:', data);
       
-      if (!data.url) {
-        throw new Error('No checkout URL received');
+      if (paymentMethod === 'klarna' && window.Klarna) {
+        // Initialize Klarna payment
+        await window.Klarna.Payments.init({
+          client_token: data.clientToken
+        });
+        
+        // Load Klarna payment methods
+        await window.Klarna.Payments.load({
+          container: '#klarna-payments-container'
+        });
+      } else if (paymentMethod === 'vipps' && data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('Invalid payment method or missing redirect URL');
       }
-
-      window.location.href = data.url;
     } catch (error) {
       console.error('Checkout error:', error);
       toast({
@@ -141,12 +183,34 @@ const CartPage = () => {
                 </div>
               </div>
             </div>
-            <Button 
-              className="w-full"
-              onClick={handleCheckout}
-            >
-              Proceed to Checkout
-            </Button>
+
+            <div className="space-y-4">
+              <RadioGroup
+                value={paymentMethod}
+                onValueChange={(value) => setPaymentMethod(value as 'vipps' | 'klarna')}
+                className="space-y-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="vipps" id="vipps" />
+                  <Label htmlFor="vipps">Vipps</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="klarna" id="klarna" />
+                  <Label htmlFor="klarna">Klarna</Label>
+                </div>
+              </RadioGroup>
+
+              {paymentMethod === 'klarna' && (
+                <div id="klarna-payments-container" className="min-h-[200px]" />
+              )}
+
+              <Button 
+                className="w-full"
+                onClick={handleCheckout}
+              >
+                Proceed to Checkout
+              </Button>
+            </div>
           </div>
         </div>
       </main>
