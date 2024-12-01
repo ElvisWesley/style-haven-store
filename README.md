@@ -24,7 +24,7 @@ Before running this project, make sure you have:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd interior-haven
+cd style-haven-store
 ```
 
 2. Install dependencies:
@@ -38,6 +38,11 @@ npm install
 
 4. Start the development server:
 ```bash
+cd server
+node index.js
+
+open new terminal
+cd src
 npm run dev
 ```
 
@@ -93,15 +98,10 @@ To test payments:
 
 - **Backend**:
   - Express.js
+  - Node.js
   - PostgreSQL
   - JWT Authentication
 
-## Support
-
-For support, please:
-1. Check the [documentation](https://docs.lovable.dev)
-2. Join our [Discord community](https://discord.gg/lovable)
-3. Open an issue in the repository
 
 ## License
 
