@@ -11,7 +11,7 @@ console.log('Initializing Vipps client with:', {
 });
 
 // Initialize Vipps client
-const client = new Client({
+const client = Client({
   merchantSerialNumber: process.env.VIPPS_MSN,
   subscriptionKey: process.env.VIPPS_SUBSCRIPTION_KEY,
   systemName: "Interior Haven",
